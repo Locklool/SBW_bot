@@ -1,2 +1,2 @@
 # SBW_bot
-This discord bot for SBW communities
+This discord bot for SBW community
