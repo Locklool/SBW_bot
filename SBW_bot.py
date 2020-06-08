@@ -347,6 +347,6 @@ async def embmaket(ctx):
 	await ctx.send(embed = emb)
 
 
-#token = os.environ.get('BOT_TOKEN')
-token = open( 'token.txt', 'r' ).readline()
+token = os.environ.get('BOT_TOKEN')
+#token = open( 'token.txt', 'r' ).readline()
 client.run(token)
