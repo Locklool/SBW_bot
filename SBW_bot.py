@@ -4,7 +4,7 @@ import datetime
 import time 
 import os
 
-PR = '*' #Префикс
+PR = '.' #Префикс
 #bad_words = ['чай']#open( 'bad_words.txt', 'r' ).readline()
 
 client = commands.Bot(command_prefix = PR)
