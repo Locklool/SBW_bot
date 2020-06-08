@@ -16,7 +16,7 @@ async def on_ready():
 	print('Bot CONNECTED')
 	channel = client.get_channel(704104096029868038)
 	await client.change_presence( status = discord.Status.online, activity = discord.Game('тестирование'))
-	#await channel.send('@everyone Бот в онлайне, теперь все команды работают')
+	await channel.send('@everyone Бот в онлайне, теперь все команды работают')
 
 
 
