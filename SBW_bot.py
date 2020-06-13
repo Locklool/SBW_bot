@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import sqlite3
-import os
 
 #Переменые sqlite3
 connection = sqlite3.connect('server.db')
