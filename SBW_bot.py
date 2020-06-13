@@ -1,10 +1,5 @@
 import discord
 from discord.ext import commands
-import sqlite3
-
-#Переменые sqlite3
-connection = sqlite3.connect('server.db')
-cursor = connection.cursor()
 
 
 PR = '.' #Префикс
