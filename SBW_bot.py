@@ -1,23 +1,25 @@
 import discord
 from discord.ext import commands
-import datetime
-import time 
+import sqlite3
 import os
+import sys
+
+#Переменые sqlite3
+connection = sqlite3.connect('server.db')
+cursor = connection.cursor()
+
 
 PR = '.' #Префикс
-#bad_words = ['чай']#open( 'bad_words.txt', 'r' ).readline()
+bad_words = open( 'bad_words.txt', 'r' ).readline()
 
 client = commands.Bot(command_prefix = PR)
-
-#test_premission_role = 
 
 @client.event
 async def on_ready():
 	print('Bot CONNECTED')
 	channel = client.get_channel(704104096029868038)
 	await client.change_presence( status = discord.Status.online, activity = discord.Game('тестирование'))
-	await channel.send('@everyone Бот в онлайне, теперь все команды работают')
-
+	#await channel.send('@everyone Бот в онлайне, теперь все команды работают')
 
 
 #Убрать сообщения
@@ -31,20 +33,20 @@ async def очистка(ctx, amount = 100):
 			await ctx.channel.purge(limit = amount)
 	#Команда для админов
 	if 704098951002980383 in [y.id for y in ctx.author.roles] or 718059665899913238 in [y.id for y in ctx.author.roles] or 704300807331250307 in [y.id for y in ctx.author.roles] or 711267556937433149 in [y.id for y in ctx.author.roles]: #1 - админ, 2 - разраб, 3 - можер, 4 - зам админ
-		await ctx.channel.purge(limit = amount)
+		await ctx.channel.purge(limit = amount + 1)
 	
 
 #Кик
 @client.command(pass_context = True )
 @commands.has_permissions(administrator = True)
-async def кик(ctx, member: discord.Member, *, reason = ""):
+async def кик(ctx, member: discord.Member, *, reason):
 	print ('команда прописана')
 	channel = client.get_channel(710579006533009460)
 	emb = discord.Embed( title = 'Кик',colour = discord.Color.red())
 	#Удаление сообщения
 	await ctx.channel.purge(limit = 1)
 
-	await member.kick(reason = reason)
+	# await member.kick(reason = reason)
 
 	emb.set_author(name = client.user.name, icon_url = client.user.avatar_url)
 	emb.add_field(name = f'Был кикнут по причине {reason}', value = member.mention)
@@ -60,7 +62,7 @@ async def бан(ctx, member: discord.Member,*, reason = ""):
 	#Удаление сообщения
 	await ctx.channel.purge(limit = 1)
 
-	await member.ban(reason = reason)
+	# await member.ban(reason = reason)
 
 	emb.set_author(name = client.user.name, icon_url = client.user.avatar_url)
 	emb.add_field(name = f'Был забанен по причине {reason}', value = member.mention)
@@ -93,6 +95,7 @@ async def размут(ctx, member: discord.Member):
 	channel = client.get_channel(710579006533009460)
 	if ctx.channel.id == 704108242493767800: #Вопрос где производиласть команда?
 		if 709489069528186900 in [y.id for y in ctx.author.roles]: #Вопрос кто воизпроводил команду?
+			print('a')
 			emb = discord.Embed( title = 'Размут',colour = discord.Color.green())
 			#Удаление сообщения
 			await ctx.channel.purge(limit = 1)
@@ -102,10 +105,12 @@ async def размут(ctx, member: discord.Member):
 			emb.add_field(name = '''Был размучен''', value = member.mention)
 			await channel.send(embed = emb)
 	else:
+		print('b')
 		await ctx.channel.purge(limit = 1)
-		await ctx.sen(f'{ctx.author.mention} Вы не имеете право изпользовать эту команду')
+		await ctx.send(f'{ctx.author.mention} Вы не имеете право изпользовать эту команду')
 	#Команда для админов
 	if 704098951002980383 in [y.id for y in ctx.author.roles] or 718059665899913238 in [y.id for y in ctx.author.roles] or 704300807331250307 in [y.id for y in ctx.author.roles] or 711267556937433149 in [y.id for y in ctx.author.roles]: #1 - админ, 2 - разраб, 3 - можер, 4 - зам админ
+		print('c')
 		emb = discord.Embed( title = 'Размут',colour = discord.Color.green())
 		#Удаление сообщения
 		await ctx.channel.purge(limit = 1)
@@ -114,15 +119,16 @@ async def размут(ctx, member: discord.Member):
 		emb.set_author(name = client.user.name, icon_url = client.user.avatar_url)
 		emb.add_field(name = '''Был размучен''', value = member.mention)
 		await channel.send(embed = emb)
+		print('h')
 	else:
 		await ctx.channel.purge(limit = 1)
-		await ctx.sen(f'{ctx.author.mention} Вы не имеете право изпользовать эту команду')
+		await ctx.send(f'{ctx.author.mention} Вы не имеете право изпользовать эту команду')
 
-#Мут
+# Мут
 @client.command(pass_context = True )
-async def мут(ctx, member: discord.Member, reason = ""):
+async def мут(ctx, member: discord.Member, *reason):
 	channel = client.get_channel(710579006533009460)
-	#Команда для инфо-модеров
+	# Команда для инфо-модеров
 	if ctx.channel.id == 704108242493767800: #Вопрос где производиласть команда?
 		if 709489069528186900 in [y.id for y in ctx.author.roles]: #Вопрос кто воизпроводил команду?
 			emb = discord.Embed( title = 'Мут',colour = discord.Color.red())
@@ -131,7 +137,7 @@ async def мут(ctx, member: discord.Member, reason = ""):
 			mute_role = discord.utils.get(member.guild.roles, id = 710578166413918220)
 			await member.add_roles(mute_role)
 			emb.set_author(name = client.user.name, icon_url = client.user.avatar_url)
-			emb.add_field(name = f'''Был замьючен по причине {reason}''', value = member.mention)
+			emb.add_field(name = f'Был замьючен по причине: {" ".join(reason)}', value = member.mention)
 			await channel.send(embed = emb)
 		else:
 			await ctx.channel.purge(limit = 1)
@@ -149,33 +155,32 @@ async def мут(ctx, member: discord.Member, reason = ""):
 		mute_role = discord.utils.get(member.guild.roles, id = 710578166413918220)
 		await member.add_roles(mute_role)
 		emb.set_author(name = client.user.name, icon_url = client.user.avatar_url)
-		emb.add_field(name = f'''Был замьючен по причине {reason}''', value = member.mention)
+		emb.add_field(name = f'''Был замьючен по причине: {" ".join(reason)}''', value = member.mention)
 		await channel.send(embed = emb)
 	else:
 		await ctx.channel.purge(limit = 1)
 		await ctx.send(f'{ctx.author.mention} Вы не имеете право изпользовать эту команду')
 
 
-
 #Жалоба
 @client.command(pass_context = True )
-async def жалоба(ctx, member: discord.Member, reason = ""):
+async def жалоба(ctx, member: discord.Member, *reason):
 	#Канал для огласки нарушений
 	channel = client.get_channel(718195637627125962)
 	#Удаление сообщения
-	await channel.send(f'Пользователь {ctx.author.mention} пожаловался на {member.mention}, по причине: {reason}. Сылка на сообщение (просто кликните): https://discordapp.com/channels/678327101031579735/{ctx.message.channel.id}/{ctx.message.id}')
+	await channel.send(f'Пользователь {ctx.author.mention} пожаловался на {member.mention}, по причине: {" ".join(reason)}. Сылка на сообщение (просто кликните): https://discordapp.com/channels/678327101031579735/{ctx.message.channel.id}/{ctx.message.id}')
 	
 
 
 #Заявка
 @client.command(pass_context = True )
-async def заявка(ctx, reason = ""):
+async def заявка(ctx, *reason):
 	#Чат для проверки
 	channel = client.get_channel(709335990644506624)
 	if ctx.channel.id == 707672283732508673:
 		await ctx.channel.purge(limit = 1)
 		await ctx.author.send(f'Твоя заявка в сообщество SBW была принита!')
-		await channel.send(f'Пользователь {ctx.author.mention} подал заявку на вступление в клан. Эго контент: {reason}.')
+		await channel.send(f'Пользователь {ctx.author.mention} подал заявку на вступление в клан. Эго контент: {" ".join(reason)}.')
 
 
 #Тестирование
@@ -206,12 +211,12 @@ async def непроходит(ctx, member: discord.Member):
 		await ctx.senddd(f'{ctx.author.mention} Вы не имеете право изпользовать эту команду')
 
 @client.command(pass_context = True )
-async def тестирую(ctx, member: discord.Member, reason = ""):
+async def тестирую(ctx, member: discord.Member, *reason):
 	channel = client.get_channel(709335990644506624) #Чат проверка
 	if 709336731916173382 in [y.id for y in ctx.author.roles]: #Если ето тестер
 		await ctx.channel.purge(limit = 1)
 		#Кидает сообщение в лс проверечнику
-		await member.send(f"Поздравляю! Твою завку в сообщество SBW принял тестер {ctx.author.mention}, пожалуста проверь в фортнайте заявку в друзья от {reason} (ник может быть без точек). Тестер сыграет с тобой в 10 раундов бокс файтов(из низ 4 разминочных) и 6 билд файтов(из низ 2 разминочных). Если тестер во время проверки будет както токсить(обзывать и т.д) напиши на него жалобу.")
+		await member.send(f"""Поздравляю! Твою завку в сообщество SBW принял тестер {ctx.author.mention}, пожалуста проверь в фортнайте заявку в друзья от: {" ".join(reason)} . Тестер сыграет с тобой в 10 раундов бокс файтов(из низ 4 разминочных) и 6 билд файтов(из низ 2 разминочных). Если тестер во время проверки будет както токсить(обзывать и т.д) напиши на него жалобу.""")
 		await channel.send(f'{ctx.author.mention} Проверяет {member.mention}')
 	else:
 		await ctx.channel.purge(limit = 1)
@@ -274,16 +279,14 @@ async def on_member_join(member):
 @client.event
 async def on_message( message ):
 	await client.process_commands( message )
-	msg = message.content.lower()
+
 	channel = client.get_channel(713769252523475055)
-	#if bad_words in msg :
-		#await message.delete()
-		#await message.author.send(f'{message.author.name} не надо так писать')
-		#print('Сработал фильтр')
-	if 'фларти' in message.content:
-		await channel.send('недо стример')
-	if message.channel.id == 713769252523475055:
-		await message.add_reaction('✅')
+	for word in message.content.split():
+		if word.lower() in bad_words:
+			await message.delete()
+			await message.author.send(f"{message.author.name} не надо так писать")
+		else:
+			pass
 
 	#Удаление спама в заявках
 	if message.channel.id == 707672283732508673: #Проверка канала
@@ -297,14 +300,14 @@ async def on_message( message ):
 	if message.channel.id == 718473326867251211: #Проверка канала 
 
 		if 'заявка' in message.content:
-			print('')
+			pass
 				
 		else:
 			await message.channel.purge(limit = 1)
 
 
 #Команда для выдачи роли инфо-модера
-@client.command(pass_context = True )
+@client.command(pass_context=True)
 @commands.has_permissions(administrator = True)
 async def give_mod(ctx, member: discord.Member):
 	channel = client.get_channel(709368859542421504)
@@ -348,5 +351,5 @@ async def embmaket(ctx):
 
 
 token = os.environ.get('BOT_TOKEN')
-#token = open( 'token.txt', 'r' ).readline()
+# token = open( 'token.txt', 'r' ).readline()
 client.run(token)

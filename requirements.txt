@@ -2,3 +2,6 @@ discord.py
 aiohttp
 websockets
 chardet
+sys
+os
+sqlite3
