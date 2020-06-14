@@ -5,7 +5,7 @@ import sys
 
 
 PR = '.' #Префикс
-bad_words = open( 'bad_words.txt', 'r' ).readline()
+bad_words = ["Блять","Сука"]
 
 client = commands.Bot(command_prefix = PR)
 
