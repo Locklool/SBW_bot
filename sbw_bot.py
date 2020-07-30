@@ -28,7 +28,6 @@ class DisId:
 	OficialRoleID = 707676867234103427
 
 
-=======
 import os
 import sys
 
