@@ -438,6 +438,6 @@ async def give_mod(ctx, member: discord.Member):
 
 
 
-# token = os.environ.get('BOT_TOKEN')
-token = ("NzA5MTQ2MTUyMTI1MjAyNDMy.Xrhp0Q.5HjNOb4o9u7MZ6vi-hBUiCSdY_E")
+token = os.environ.get('BOT_TOKEN')
+#token = ("NzA5MTQ2MTUyMTI1MjAyNDMy.Xrhp0Q.5HjNOb4o9u7MZ6vi-hBUiCSdY_E")
 client.run(token)
