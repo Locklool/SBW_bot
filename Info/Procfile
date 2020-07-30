@@ -1,0 +1,1 @@
+worker: python SBW_bot.py
