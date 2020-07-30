@@ -1,4 +1,0 @@
-ID:709146152125202432
-Token:NzA5MTQ2MTUyMTI1MjAyNDMy.XrxKsA.tSiXVDqkrz-pFnXjtqtFPv90M2U
-https://discord.com/oauth2/authorize?client_id=709146152125202432&scope=bot&permissions=8
-https://discord.com/oauth2/authorize?client_id=YOUR_ID&scope=bot&permissions=8
