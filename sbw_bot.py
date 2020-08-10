@@ -470,5 +470,5 @@ async def __revork_my_acc(ctx, member: discord.Member = None, *name):
 
 
 # token = os.environ.get('BOT_TOKEN')
-token = ("NzA5MTQ2MTUyMTI1MjAyNDMy.Xrhp0Q.ZnOoe5PlH0KuLf86YKFCszbcznY")
+token = ("token")
 client.run(token)
